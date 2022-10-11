@@ -5,10 +5,10 @@ from matplotlib import pyplot as plt
 import numpy as np
 import sqlite3
 
+
 def acessa_banco():
     con = sqlite3.connect('banco.db')
     cur = con.cursor()
-
 
     dados1 = cur.execute('''
         select x, y
@@ -48,6 +48,7 @@ def desenha(x, y1, y2):
 
     plt.savefig('gráfico.png', format='png')
     plt.show()
+
 
 def main():
     x, y1, y2 = acessa_banco()
