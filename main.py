@@ -1,6 +1,7 @@
 from selenium import webdriver
 import os
 import time
+import sqlite3
 
 
 def main():
@@ -21,25 +22,21 @@ def main():
         elements = driver.find_elements_by_xpath(xpath_1)
         print('existem %d elementos da classe %s' % (len(elements), xpath_1))
 
-        for element in elements:
+        # abre uma conexão
+        con = sqlite3.connect('banco.db')
+        # pega um cursor, que é o objeto que irá executar as transações
+        cur = con.cursor()
+
+        for i, element in enumerate(elements):
             print(element.text)
 
-        # # pega apenas o primeiro <p> da página
-        # element = driver.find_element_by_tag_name("p")
-        # print(element.text)  # imprime o texto do primeiro paraǵrafo
-        # # pega todos os <p> da página
-        # elements = driver.find_elements_by_tag_name("p")
-        # for some in elements:
-        #     print(some.text)
-        #
-        # # pega todos os <p> da página
-        # elements = driver.find_elements_by_class_name("strait")
-        # for some in elements:
-        #     print(some.text)
-        # element = driver.find_element_by_id("lista")
-        # elements = driver.find_elements_by_xpath('/html/body/ul/li')
-        # for some in elements:
-        #     print(some.text)
+            cur.execute(
+                'INSERT INTO produtos(id_produto, nome) VALUES ({0}, \'{1}\')'.format(i, element.text)
+            )
+
+        con.commit()
+        # fecha conexão com o banco
+        con.close()
 
 
 if __name__ == '__main__':
