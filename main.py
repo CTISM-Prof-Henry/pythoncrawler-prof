@@ -27,12 +27,18 @@ def main():
         # pega um cursor, que é o objeto que irá executar as transações
         cur = con.cursor()
 
-        for i, element in enumerate(elements):
-            print(element.text)
+        # pega o ultimo id da tabela produtos
+        try:
+            last_id = int(cur.execute('SELECT MAX(id_produto) from produtos').fetchone()[0]) + 1;
+        except:
+            last_id = 0
 
+
+        for element in elements:
             cur.execute(
-                'INSERT INTO produtos(id_produto, nome) VALUES ({0}, \'{1}\')'.format(i, element.text)
+                'INSERT INTO produtos(id_produto, nome) VALUES ({0}, \'{1}\')'.format(last_id, element.text)
             )
+            last_id += 1
 
         con.commit()
         # fecha conexão com o banco
